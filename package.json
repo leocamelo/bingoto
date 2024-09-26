@@ -1,0 +1,21 @@
+{
+  "name": "bingoto",
+  "version": "0.0.0",
+  "author": "Leonardo Camelo <leocamelo@users.noreply.github.com>",
+  "repository": "https://github.com/leocamelo/bingoto",
+  "scripts": {
+    "cljs:dev": "shadow-cljs watch app",
+    "css:dev": "tailwindcss -i src/css/app.css -o public/css/app.css --watch",
+    "dev": "concurrently npm:*:dev"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "concurrently": "^9.0.1",
+    "shadow-cljs": "^2.28.15",
+    "tailwindcss": "^3.4.13"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
