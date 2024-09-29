@@ -1,4 +1,13 @@
-(ns bingoto.components)
+(ns bingoto.components
+  (:require
+   [reitit.frontend.easy :as rfe]))
+
+(defn navbar []
+  [:ul.my-4
+   [:li [:a {:href (rfe/href :home)} "Home"]]
+   [:li [:a {:href (rfe/href :login)} "Login"]]
+   [:li [:a {:href (rfe/href :signup)} "Signup"]]
+   [:li [:a {:href (rfe/href :bingo)} "Bingo"]]])
 
 (defn- bingo75-card-head [value]
   [:div.h-20.w-20.place-content-center.text-center.rounded.bg-amber-200.font-bold
