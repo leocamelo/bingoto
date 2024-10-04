@@ -17,28 +17,34 @@
 ;; Views
 
 (defn- home-page []
-  [:h1 "Home Page"])
+  [c/dashboard
+   {:route :home, :title "Home"}
+   [:div "here home page content"]])
 
 (defn- login-page []
-  [:h1 "Login Page"])
+  [c/dashboard
+   {:route :login, :title "Login"}
+   [:div "here login page content"]])
 
 (defn- signup-page []
-  [:h1 "Signup Page"])
+  [c/dashboard
+   {:route :signup, :title "Signup"}
+   [:div "here signup page content"]])
 
 (defn- bingo-page []
-  [:div.text-center
-   [:h1.text-3xl.font-semibold.my-4 "Welcome to Bingo!"]
+  [c/dashboard
+   {:route :bingo, :title "Welcome to Bingo!"}
    [c/bingo75-card (bingo75/gen-values (js/Date.now))]])
 
 (defn- not-found-page []
-  [:h1 "Not Found Page"])
+  [c/dashboard
+   {:title "Not Found"}
+   [:div "here not found page content"]])
 
 (defn- app []
-  [:div.container.mx-auto
-   [c/navbar]
-   [(if @router-match
-      (:view (:data @router-match))
-      not-found-page)]])
+  [(if @router-match
+     (:view (:data @router-match))
+     not-found-page)])
 
 ;; -------------------------
 ;; Routes
@@ -58,7 +64,8 @@
 ;; -------------------------
 ;; Initialize app
 
-(defonce root (rdc/create-root (js/document.getElementById "root")))
+(defonce root (rdc/create-root
+               (js/document.getElementById "root")))
 
 (defn ^:export init! []
   (start-router)

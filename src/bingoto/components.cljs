@@ -2,12 +2,45 @@
   (:require
    [reitit.frontend.easy :as rfe]))
 
-(defn navbar []
-  [:ul.my-4
-   [:li [:a {:href (rfe/href :home)} "Home"]]
-   [:li [:a {:href (rfe/href :login)} "Login"]]
-   [:li [:a {:href (rfe/href :signup)} "Signup"]]
-   [:li [:a {:href (rfe/href :bingo)} "Bingo"]]])
+(defn container [content]
+  [:div.mx-auto.max-w-7xl.px-4.py-6.sm:px-6.lg:px-8
+   content])
+
+(defn navbar-link [current-route route label]
+  [:a.rounded-md.px-3.py-2.text-sm.font-medium
+   {:href (rfe/href route)
+    :class (if (= current-route route)
+             "bg-gray-900 text-white"
+             "text-gray-300 hover:bg-gray-700 hover:text-white")}
+   label])
+
+(defn navbar [current-route]
+  [:nav.bg-gray-800
+   [:div.mx-auto.max-w-7xl.px-4.sm:px-6.lg:px-8
+    [:div.flex.h-16.items-center.justify-between
+     [:div.flex.items-center
+      [:div.flex-shrink-0
+       [:img.h-8.w-8
+        {:src "https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+         :alt "Bingoto"}]]
+      [:div.hidden.md:block
+       [:div.ml-10.flex.items-baseline.space-x-4
+        [navbar-link current-route :home "Home"]
+        [navbar-link current-route :login "Login"]
+        [navbar-link current-route :signup "Signup"]
+        [navbar-link current-route :bingo "Bingo"]]]]]]])
+
+(defn header [title]
+  [:header.bg-white.shadow
+   [container
+    [:h1.text-3xl.font-bold.tracking-tight.text-center.text-gray-900
+     title]]])
+
+(defn dashboard [attrs content]
+  [:div.min-h-full
+   [navbar (:route attrs)]
+   [header (:title attrs)]
+   [:main [container content]]])
 
 (defn- bingo75-card-head [value]
   [:div.h-20.w-20.place-content-center.text-center.rounded.bg-amber-200.font-bold
@@ -19,6 +52,7 @@
 
 (defn bingo75-card [values]
   (let [header [\B \I \N \G \O]]
-    [:div.inline-grid.grid-cols-5.gap-4
-     (for [v header] ^{:key v} [bingo75-card-head v])
-     (for [v values] ^{:key v} [bingo75-card-body v])]))
+    [:div.text-center
+     [:div.inline-grid.grid-cols-5.gap-4
+      (for [v header] ^{:key v} [bingo75-card-head v])
+      (for [v values] ^{:key v} [bingo75-card-body v])]]))
