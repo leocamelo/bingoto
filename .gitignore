@@ -1,22 +1,25 @@
-/target
-/classes
-/checkouts
-profiles.clj
-pom.xml
-pom.xml.asc
-*.jar
-*.class
+/out/
+/resources/public/js/
+/resources/public/css/
+/target/
+/*-init.clj
+/*.log
+
+# Leiningen
 /.lein-*
-/.lsp
-/.clj-kondo
 /.nrepl-port
-/.shadow-cljs
-/resources/public/js
-/resources/public/css
-/public/js
-/public/css
-/out
-/.repl
-*.log
-/.env
-/node_modules
+
+# Node.js dependencies
+/node_modules/
+
+# shadow-cljs cache, port files
+/.shadow-cljs/
+
+# clj-kondo cache and configs from libs
+/.clj-kondo/*
+
+# clj-kondo config
+!/.clj-kondo/config.edn
+
+# clojure-lsp cache
+/.lsp/.cache

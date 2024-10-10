@@ -1,72 +1,43 @@
 (ns bingoto.core
   (:require
-   ["react" :as react]
-   [reagent.core :as r]
-   [reagent.dom.client :as rdc]
+   ["react" :refer [StrictMode]]
+   [reagent.dom.client :as rdomc]
+   [re-frame.core :as re-frame]
    [reitit.frontend :as rf]
    [reitit.frontend.easy :as rfe]
-   [bingoto.components :as c]
-   [bingoto.factories.bingo75 :as bingo75]))
+   [bingoto.config :as config]
+   [bingoto.events :as events]
+   [bingoto.views :as views]))
 
-;; -------------------------
-;; State
-
-(defonce router-match (r/atom nil))
-
-;; -------------------------
-;; Views
-
-(defn- home-page []
-  [c/dashboard
-   {:route :home, :title "Home"}
-   [:div "here home page content"]])
-
-(defn- login-page []
-  [c/dashboard
-   {:route :login, :title "Login"}
-   [:div "here login page content"]])
-
-(defn- signup-page []
-  [c/dashboard
-   {:route :signup, :title "Signup"}
-   [:div "here signup page content"]])
-
-(defn- bingo-page []
-  [c/dashboard
-   {:route :bingo, :title "Welcome to Bingo!"}
-   [c/bingo75-card (bingo75/gen-values (js/Date.now))]])
-
-(defn- not-found-page []
-  [c/dashboard
-   {:title "Not Found"}
-   [:div "here not found page content"]])
-
-(defn- app []
-  [(if @router-match
-     (:view (:data @router-match))
-     not-found-page)])
-
-;; -------------------------
-;; Routes
+;;; Routing ;;;
 
 (def routes
-  [["/"       {:name :home   :view home-page}]
-   ["/login"  {:name :login  :view login-page}]
-   ["/signup" {:name :signup :view signup-page}]
-   ["/bingo"  {:name :bingo  :view bingo-page}]])
+  [["/"       {:name :home   :view views/home}]
+   ["/login"  {:name :login  :view views/login}]
+   ["/signup" {:name :signup :view views/signup}]
+   ["/bingo"  {:name :bingo  :view views/bingo}]])
 
 (defn- start-router []
   (rfe/start!
    (rf/router routes)
-   #(reset! router-match %)
+   #(re-frame/dispatch [::events/navigated %])
    {:use-fragment false}))
 
-;; -------------------------
-;; Initialize app
+;;; Setup ;;;
 
-(defonce root (rdc/create-root
-               (js/document.getElementById "root")))
+(defonce root (rdomc/create-root
+               (js/document.getElementById "app")))
 
-(defn ^:export init! []
+(defn dev-setup []
+  (when config/debug?
+    (println "dev mode")))
+
+(defn mount-root []
+  (re-frame/clear-subscription-cache!)
+  (rdomc/render root [:> StrictMode {} [views/main]]))
+
+(defn init []
+  (re-frame/dispatch-sync [::events/initialize-db])
+  (dev-setup)
   (start-router)
-  (rdc/render root [:> react/StrictMode {} [app]]))
+  (mount-root))

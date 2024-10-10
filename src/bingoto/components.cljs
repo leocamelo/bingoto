@@ -1,14 +1,24 @@
 (ns bingoto.components
   (:require
-   [reitit.frontend.easy :as rfe]))
+   [reitit.frontend.easy :refer [href]]))
+
+;;; container ;;;
 
 (defn container [content]
   [:div.mx-auto.max-w-7xl.px-4.py-6.sm:px-6.lg:px-8
    content])
 
-(defn navbar-link [current-route route label]
+;;; navbar ;;;
+
+(defn- navbar-logo []
+  [:div.flex-shrink-0
+   [:img.h-8.w-8
+    {:src "https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+     :alt "Bingoto"}]])
+
+(defn- navbar-link [current-route route label]
   [:a.rounded-md.px-3.py-2.text-sm.font-medium
-   {:href (rfe/href route)
+   {:href (href route)
     :class (if (= current-route route)
              "bg-gray-900 text-white"
              "text-gray-300 hover:bg-gray-700 hover:text-white")}
@@ -19,10 +29,7 @@
    [:div.mx-auto.max-w-7xl.px-4.sm:px-6.lg:px-8
     [:div.flex.h-16.items-center.justify-between
      [:div.flex.items-center
-      [:div.flex-shrink-0
-       [:img.h-8.w-8
-        {:src "https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-         :alt "Bingoto"}]]
+      [navbar-logo]
       [:div.hidden.md:block
        [:div.ml-10.flex.items-baseline.space-x-4
         [navbar-link current-route :home "Home"]
@@ -30,17 +37,23 @@
         [navbar-link current-route :signup "Signup"]
         [navbar-link current-route :bingo "Bingo"]]]]]]])
 
+;;; header ;;;
+
 (defn header [title]
   [:header.bg-white.shadow
    [container
     [:h1.text-3xl.font-bold.tracking-tight.text-center.text-gray-900
      title]]])
 
+;;; dashboard ;;;
+
 (defn dashboard [attrs content]
   [:div.min-h-full
    [navbar (:route attrs)]
    [header (:title attrs)]
    [:main [container content]]])
+
+;;; bingo75-card ;;;
 
 (defn- bingo75-card-head [value]
   [:div.h-20.w-20.place-content-center.text-center.rounded.bg-amber-200.font-bold
